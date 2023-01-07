@@ -1,0 +1,48 @@
+# CL files
+*.ilk
+*.pdb
+*.exp
+
+#game state
+game_state.json
+quicksafe.json
+roseoptions.json
+recording.json
+
+#Imgui
+imgui.ini
+
+# Prerequisites
+*.d
+
+*.bak
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
