@@ -77,30 +77,15 @@ enum class StoneState : int {
 };
 
 enum class WorldState : int {
-    NewGame,
     Running,
     Paused,
 };
 
-struct Stone {
-    Vector3 position = { 0,0,0 };
-    Vector3 size = { 1,1,1 };
-    Color color = RED;
-    StoneState state = StoneState::Alive;
-};
-
 struct World {
-  Vector3 cubePosition = { 0,0,0 };
-  Vector3 ballPosition = { 0,1,0 };
-  Vector3 ballVelocity = { 1,1,0 };
-  Vector3 currentStick = { 0,0,0 };
-
-  rose::hash_value random = 0;
-  int points = 0;
-
+  bool quarter_steps = false;
+  WorldState state = WorldState::Running;
   PadEvent previous_pad_event;
-  WorldState state = WorldState::NewGame;
-  std::vector<Stone> stones;
+  Vector3 currentStick = {0,0};
 };
 
 struct PadEventFrameTuple {

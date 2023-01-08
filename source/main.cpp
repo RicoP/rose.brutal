@@ -21,11 +21,6 @@
 #include "raymarcher.h"
 
 World world;
-//Camera3D camera = { 0 };
-float ballSpeed = .3f;
-float ballRadius = .5f;
-Texture2D cubeTexture;  
-
 WorldRecording worldrecording;
 
 static Vector3 operator*(Vector3 lhs, float rhs) {
@@ -59,7 +54,6 @@ static Vector3 & operator+=(Vector3 & lhs, Vector3 rhs) {
 void processPadEvent(const PadEvent & pad) ;
 
 ROSE_EXPORT void postload() {
-
     camera.position = Vector3{ 2.5f, 2.5f, 3.0f };    // Camera position
     camera.target = Vector3{ 0.0f, 0.0f, 0.7f };      // Camera looking at point
     camera.up = Vector3{ 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
@@ -231,40 +225,15 @@ ROSE_EXPORT void draw() {
 
     ImguiSerializer serializer;
     rose::ecs::serialize(world, serializer);
-
-    //BeginDrawing();
-    {
-        //ClearBackground(DARKGRAY);
-
-
-        /*
-        rose::meta::request_camera_ownership();
-        auto & cam = rose::meta::system_data().camera;
-        std::memset(cam.lookat.v, 0, 16 * sizeof(float));
-        std::memset(cam.projection.v, 0, 16 * sizeof(float));
-
-        cam.lookat.m11 = cam.lookat.m22 = cam.lookat.m33 = cam.lookat.m44 = 1;
-        cam.projection.m11 = cam.projection.m22 = cam.projection.m33 = cam.projection.m44 = 1;
-        */
-
-        raymarcher_draw();
-        /*
-        BeginMode3D(camera);
-        {
-            ClearBackground({20,0,20,0});
-            
-
-            //Borders
-            DrawCubeWires({-14.0f,   .0f, .0f,}, 1.0f, 100.0f, 1.0f, GRAY);
-            DrawCubeWires({ 14.0f,   .0f, .0f,}, 1.0f, 100.0f, 1.0f, GRAY);
-            DrawCubeWires({   .0f, 24.0f, .0f,}, 29.0f, 1.0f, 1.0f, GRAY);
-
-            DrawGrid(10, 1.0f);
-        }
-        EndMode3D();
-        */
+    if(world.quarter_steps) {
+        static int frame = 0;
+        if((frame % 4) == 0) raymarcher_draw();
+        frame++;
+        frame %= 4;
     }
-    //EndDrawing();
+    else {
+        raymarcher_draw();
+    }
 }
 
 void processPadEvent(const PadEvent & pad) {

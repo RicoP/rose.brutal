@@ -35,7 +35,7 @@ namespace rose {
   }
   template<>
   struct type_id<WorldState> {
-    inline static hash_value VALUE = 18364368338018397444ULL;
+    inline static hash_value VALUE = 3483512573815606629ULL;
   };
   hash_value         hash(const WorldState &o);
   void construct_defaults(      WorldState &o); //implement me
@@ -86,23 +86,6 @@ bool operator==(const Vector3 &lhs, const Vector3 &rhs);
 bool operator!=(const Vector3 &lhs, const Vector3 &rhs);
 
 
-struct                Stone;
-namespace rose {
-  namespace ecs {
-    void        serialize(Stone &o, ISerializer &s);
-    void      deserialize(Stone &o, IDeserializer &s);
-  }
-  hash_value         hash(const Stone &o);
-  template<>
-  struct type_id<Stone> {
-    inline static hash_value VALUE = 1551552509579347363ULL;
-  };
-  void construct_defaults(      Stone &o); // implement me
-}
-bool operator==(const Stone &lhs, const Stone &rhs);
-bool operator!=(const Stone &lhs, const Stone &rhs);
-
-
 struct                World;
 namespace rose {
   namespace ecs {
@@ -112,7 +95,7 @@ namespace rose {
   hash_value         hash(const World &o);
   template<>
   struct type_id<World> {
-    inline static hash_value VALUE = 1462745189867128023ULL;
+    inline static hash_value VALUE = 2068493676604329404ULL;
   };
   void construct_defaults(      World &o); // implement me
 }
@@ -243,7 +226,6 @@ rose::hash_value       rose::hash(const StoneState& o) {
 
 const char * to_string(const WorldState & e) {
     switch(e) {
-        case WorldState::NewGame: return "NewGame";
         case WorldState::Running: return "Running";
         case WorldState::Paused: return "Paused";
         default: return "<UNKNOWN>";
@@ -251,11 +233,6 @@ const char * to_string(const WorldState & e) {
 }
 void rose::ecs::serialize(WorldState& o, ISerializer& s) {
   switch (o) {
-    case WorldState::NewGame: {
-      char str[] = "NewGame";
-      serialize(str, s);
-      break;
-    }
     case WorldState::Running: {
       char str[] = "Running";
       serialize(str, s);
@@ -274,7 +251,6 @@ void rose::ecs::deserialize(WorldState& o, IDeserializer& s) {
   deserialize(str, s);
   rose::hash_value h = rose::hash(str);
   switch (h) {
-  case rose::hash("NewGame"): o = WorldState::NewGame; break;
   case rose::hash("Running"): o = WorldState::Running; break;
   case rose::hash("Paused"): o = WorldState::Paused; break;
   default: /*unknown value*/ break;
@@ -417,121 +393,34 @@ rose::hash_value rose::hash(const Vector3 &o) {
   return h;
 }
 ///////////////////////////////////////////////////////////////////
-//  struct Stone
-///////////////////////////////////////////////////////////////////
-bool operator==(const Stone &lhs, const Stone &rhs) {
-  return
-    rose_parser_equals(lhs.position, rhs.position) &&
-    rose_parser_equals(lhs.size, rhs.size) &&
-    rose_parser_equals(lhs.color, rhs.color) &&
-    rose_parser_equals(lhs.state, rhs.state) ;
-}
-
-bool operator!=(const Stone &lhs, const Stone &rhs) {
-  return
-    !rose_parser_equals(lhs.position, rhs.position) ||
-    !rose_parser_equals(lhs.size, rhs.size) ||
-    !rose_parser_equals(lhs.color, rhs.color) ||
-    !rose_parser_equals(lhs.state, rhs.state) ;
-}
-
-void rose::ecs::serialize(Stone &o, ISerializer &s) {
-  if(s.node_begin("Stone", rose::hash("Stone"), &o)) {
-    s.key("position");
-    serialize(o.position, s);
-    s.key("size");
-    serialize(o.size, s);
-    s.key("color");
-    serialize(o.color, s);
-    s.key("state");
-    serialize(o.state, s);
-    s.node_end();
-  }
-  s.end();
-}
-
-void rose::ecs::deserialize(Stone &o, IDeserializer &s) {
-  //implement me
-  //construct_defaults(o);
-
-  while (s.next_key()) {
-    switch (s.hash_key()) {
-      case rose::hash("position"):
-        deserialize(o.position, s);
-        break;
-      case rose::hash("size"):
-        deserialize(o.size, s);
-        break;
-      case rose::hash("color"):
-        deserialize(o.color, s);
-        break;
-      case rose::hash("state"):
-        deserialize(o.state, s);
-        break;
-      default: s.skip_key(); break;
-    }
-  }
-}
-
-rose::hash_value rose::hash(const Stone &o) {
-  rose::hash_value h = rose::hash(o.position);
-  h = rose::xor64(h);
-  h ^= rose::hash(o.size);
-  h = rose::xor64(h);
-  h ^= rose::hash(o.color);
-  h = rose::xor64(h);
-  h ^= rose::hash(o.state);
-  return h;
-}
-///////////////////////////////////////////////////////////////////
 //  struct World
 ///////////////////////////////////////////////////////////////////
 bool operator==(const World &lhs, const World &rhs) {
   return
-    rose_parser_equals(lhs.cubePosition, rhs.cubePosition) &&
-    rose_parser_equals(lhs.ballPosition, rhs.ballPosition) &&
-    rose_parser_equals(lhs.ballVelocity, rhs.ballVelocity) &&
-    rose_parser_equals(lhs.currentStick, rhs.currentStick) &&
-    rose_parser_equals(lhs.random, rhs.random) &&
-    rose_parser_equals(lhs.points, rhs.points) &&
-    rose_parser_equals(lhs.previous_pad_event, rhs.previous_pad_event) &&
+    rose_parser_equals(lhs.quarter_steps, rhs.quarter_steps) &&
     rose_parser_equals(lhs.state, rhs.state) &&
-    rose_parser_equals(lhs.stones, rhs.stones) ;
+    rose_parser_equals(lhs.previous_pad_event, rhs.previous_pad_event) &&
+    rose_parser_equals(lhs.currentStick, rhs.currentStick) ;
 }
 
 bool operator!=(const World &lhs, const World &rhs) {
   return
-    !rose_parser_equals(lhs.cubePosition, rhs.cubePosition) ||
-    !rose_parser_equals(lhs.ballPosition, rhs.ballPosition) ||
-    !rose_parser_equals(lhs.ballVelocity, rhs.ballVelocity) ||
-    !rose_parser_equals(lhs.currentStick, rhs.currentStick) ||
-    !rose_parser_equals(lhs.random, rhs.random) ||
-    !rose_parser_equals(lhs.points, rhs.points) ||
-    !rose_parser_equals(lhs.previous_pad_event, rhs.previous_pad_event) ||
+    !rose_parser_equals(lhs.quarter_steps, rhs.quarter_steps) ||
     !rose_parser_equals(lhs.state, rhs.state) ||
-    !rose_parser_equals(lhs.stones, rhs.stones) ;
+    !rose_parser_equals(lhs.previous_pad_event, rhs.previous_pad_event) ||
+    !rose_parser_equals(lhs.currentStick, rhs.currentStick) ;
 }
 
 void rose::ecs::serialize(World &o, ISerializer &s) {
   if(s.node_begin("World", rose::hash("World"), &o)) {
-    s.key("cubePosition");
-    serialize(o.cubePosition, s);
-    s.key("ballPosition");
-    serialize(o.ballPosition, s);
-    s.key("ballVelocity");
-    serialize(o.ballVelocity, s);
-    s.key("currentStick");
-    serialize(o.currentStick, s);
-    s.key("random");
-    serialize(o.random, s);
-    s.key("points");
-    serialize(o.points, s);
-    s.key("previous_pad_event");
-    serialize(o.previous_pad_event, s);
+    s.key("quarter_steps");
+    serialize(o.quarter_steps, s);
     s.key("state");
     serialize(o.state, s);
-    s.key("stones");
-    serialize(o.stones, s);
+    s.key("previous_pad_event");
+    serialize(o.previous_pad_event, s);
+    s.key("currentStick");
+    serialize(o.currentStick, s);
     s.node_end();
   }
   s.end();
@@ -543,32 +432,17 @@ void rose::ecs::deserialize(World &o, IDeserializer &s) {
 
   while (s.next_key()) {
     switch (s.hash_key()) {
-      case rose::hash("cubePosition"):
-        deserialize(o.cubePosition, s);
-        break;
-      case rose::hash("ballPosition"):
-        deserialize(o.ballPosition, s);
-        break;
-      case rose::hash("ballVelocity"):
-        deserialize(o.ballVelocity, s);
-        break;
-      case rose::hash("currentStick"):
-        deserialize(o.currentStick, s);
-        break;
-      case rose::hash("random"):
-        deserialize(o.random, s);
-        break;
-      case rose::hash("points"):
-        deserialize(o.points, s);
-        break;
-      case rose::hash("previous_pad_event"):
-        deserialize(o.previous_pad_event, s);
+      case rose::hash("quarter_steps"):
+        deserialize(o.quarter_steps, s);
         break;
       case rose::hash("state"):
         deserialize(o.state, s);
         break;
-      case rose::hash("stones"):
-        deserialize(o.stones, s);
+      case rose::hash("previous_pad_event"):
+        deserialize(o.previous_pad_event, s);
+        break;
+      case rose::hash("currentStick"):
+        deserialize(o.currentStick, s);
         break;
       default: s.skip_key(); break;
     }
@@ -576,23 +450,13 @@ void rose::ecs::deserialize(World &o, IDeserializer &s) {
 }
 
 rose::hash_value rose::hash(const World &o) {
-  rose::hash_value h = rose::hash(o.cubePosition);
-  h = rose::xor64(h);
-  h ^= rose::hash(o.ballPosition);
-  h = rose::xor64(h);
-  h ^= rose::hash(o.ballVelocity);
-  h = rose::xor64(h);
-  h ^= rose::hash(o.currentStick);
-  h = rose::xor64(h);
-  h ^= rose::hash(o.random);
-  h = rose::xor64(h);
-  h ^= rose::hash(o.points);
-  h = rose::xor64(h);
-  h ^= rose::hash(o.previous_pad_event);
+  rose::hash_value h = rose::hash(o.quarter_steps);
   h = rose::xor64(h);
   h ^= rose::hash(o.state);
   h = rose::xor64(h);
-  h ^= rose::hash(o.stones);
+  h ^= rose::hash(o.previous_pad_event);
+  h = rose::xor64(h);
+  h ^= rose::hash(o.currentStick);
   return h;
 }
 ///////////////////////////////////////////////////////////////////
