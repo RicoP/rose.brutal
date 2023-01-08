@@ -1,5 +1,22 @@
-#version 330
+@vs vs
+uniform vs_params {
+    mat4 mvp;
+};
 
+in vec2 in_fragTexCoord;
+in vec4 in_fragColor;
+
+out vec2 fragTexCoord;
+out vec4 fragColor;
+
+void main() {
+    fragTexCoord = in_fragTexCoord;
+    fragColor = in_fragColor;
+}
+@end
+
+@fs fs
+//RAYTRACER
 // Input vertex attributes (from vertex shader)
 in vec2 fragTexCoord;
 in vec4 fragColor;
@@ -7,10 +24,12 @@ in vec4 fragColor;
 // Output fragment color
 out vec4 finalColor;
 
-uniform vec3 viewEye;
-uniform vec3 viewCenter;
-uniform float runTime;
-uniform vec2 resolution;
+uniform raytracer_params {
+    vec3 viewEye;
+    float runTime;
+    vec3 viewCenter;
+    vec2 resolution;
+};
 
 // The MIT License
 // Copyright © 2013 Inigo Quilez
@@ -428,3 +447,8 @@ void main()
 
     finalColor = vec4( tot, 1.0 );
 }
+
+//RAYTRACER END
+@end
+
+@program raytracer vs fs
