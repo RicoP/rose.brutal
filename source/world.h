@@ -3,6 +3,7 @@
 #include <raylib.h>
 #include <vector>
 #include <rose/hash.h>
+#include <rose.h>
 
 // Import Raylib structs
 

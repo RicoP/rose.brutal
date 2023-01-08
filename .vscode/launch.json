@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+    {
+        "name": "ROSE (gdb) Attach",
+        "type": "cppvsdbg",
+        "request": "launch",
+        "program": "A:\\rose_repo\\environment\\PATH\\rose.exe",
+        //"processId": "${command:pickProcess}",
+        "symbolSearchPath": "C:\\Users\\Rico\\AppData\\Local\\Temp",
+        "cwd": "${workspaceFolder}/.build",
+    }
+    ]
+}
