@@ -65,11 +65,11 @@
 #define SLOT_raytracer_params (0)
 #pragma pack(push,1)
 SOKOL_SHDC_ALIGN(16) typedef struct raytracer_params_t {
-    float viewEye[3];
+    Vector3 viewEye;
     float runTime;
-    float viewCenter[3];
+    Vector3 viewCenter;
     uint8_t _pad_28[4];
-    float resolution[2];
+    Vector2 resolution;
     uint8_t _pad_40[8];
 } raytracer_params_t;
 #pragma pack(pop)
